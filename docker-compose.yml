@@ -1,0 +1,22 @@
+version: '3'
+services:
+  web:
+    container_name: web-chart-v9
+    image: v9:1.15.7.4
+    ports:
+      - "80:80"
+    restart: always
+
+  web2:
+    container_name: web-chart-v1
+    image: wittayakum/web-chart-t1:1.0
+    ports:
+      - "88:80"
+    restart: always
+  
+  # flask-api:
+  #   container_name: flask-api
+  #   image: wittayakum/py-api-mongo
+  #   ports:
+  #     - "5000:5000"
+  #   restart: always

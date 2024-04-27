@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Line Chart from JSON API</title>
+    <!-- นำเข้า Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .chart-container {
+            width: 100%;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* ปรับเพื่อจัดตำแหน่งปุ่มและ dropdown ให้อยู่ด้านขวา */
+            margin-bottom: 20px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        .search-container button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 100px; /* เพิ่มระยะห่างขวา */
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 260px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .collection-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="collection-name" id="collectionName"></div>
+        <input type="text" id="searchInput" placeholder="ค้นหา...">
+        <button onclick="search()">ค้นหา</button>
+        <div class="dropdown" id="dropdown">
+            <button class="dropbtn">เลือกข้อมูล</button>
+            <div class="dropdown-content" id="dropdownContent">
+                <!-- สร้าง dropdown ที่จะแสดงข้อมูล -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="chart-container">
+            <canvas id="mplChart" width="400" height="300"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="ocChart" width="400" height="300"></canvas>
+        </div>
+    </div>
+    <!-- สคริปต์ JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
