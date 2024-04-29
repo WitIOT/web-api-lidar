@@ -2,41 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Line Chart from JSON API</title>
-    <!-- นำเข้า Chart.js -->
+    <title>Combined Line Chart</title>
+    <!-- Import Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
     <style>
         .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
         }
 
         .chart-container {
-            width: 100%;
-            aspect-ratio: 4 / 3; 
+            width: 80%;
+            aspect-ratio: 4 / 3;
         }
 
         .search-container {
             display: flex;
             align-items: center;
-            justify-content: space-between; /* ปรับเพื่อจัดตำแหน่งปุ่มและ dropdown ให้อยู่ด้านขวา */
-            margin-bottom: 20px;
+            justify-content: space-between;
+            margin: 20px;
         }
 
-        .search-container input[type="text"] {
+        .search-container input[type="text"], .search-container button {
             padding: 8px;
             margin-right: 10px;
         }
 
         .search-container button {
-            padding: 8px 12px;
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            margin-right: 100px; /* เพิ่มระยะห่างขวา */
         }
 
         .dropdown {
@@ -48,7 +46,7 @@
             display: none;
             position: absolute;
             background-color: #f9f9f9;
-            min-width: 260px;
+            min-width: 160px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 1;
         }
@@ -67,34 +65,22 @@
         .dropdown:hover .dropdown-content {
             display: block;
         }
-        
-        .collection-name {
-            font-size: 18px;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
     <div class="search-container">
-        <div class="collection-name" id="collectionName"></div>
-        <input type="text" id="searchInput" placeholder="ค้นหา...">
-        <button onclick="search()">SEARCH</button>
-        <div class="dropdown" id="dropdown">
-            <button class="dropbtn">เลือกข้อมูล</button>
-            <div class="dropdown-content" id="dropdownContent">
-                <!-- สร้าง dropdown ที่จะแสดงข้อมูล -->
-            </div>
+        <input type="text" id="searchInput" placeholder="Search...">
+        <div class="dropdown">
+            <button class="dropbtn">Select Collection</button>
+            <div class="dropdown-content" id="dropdownContent"></div>
         </div>
+        <button onclick="search()">SEARCH</button>
     </div>
     <div class="container">
         <div class="chart-container">
-            <canvas id="mplChart" width="600" height="450"></canvas>
-        </div>
-        <div class="chart-container">
-            <canvas id="ocChart" width="600" height="450"></canvas>
+            <canvas id="combinedChart"></canvas>
         </div>
     </div>
-    <!-- สคริปต์ JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>

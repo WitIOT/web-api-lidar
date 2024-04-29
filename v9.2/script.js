@@ -1,14 +1,21 @@
 var selectedCollection = ''; // เก็บชื่อ collection ที่เลือก
-// สร้างแผนภูมิ MPL_cal เป็นแกน y และ MPL_dis เป็นแกน x
-var mplCtx = document.getElementById('mplChart').getContext('2d');
-var mplChart = new Chart(mplCtx, {
+var ctx = document.getElementById('combinedChart').getContext('2d');
+var combinedChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: [], // Labels from API
+        labels: [], // Labels will be filled from API data
         datasets: [{
             label: 'MPL_cal',
-            data: [], // Data from API
+            yAxisID: 'y',
             borderColor: 'blue',
+            data: [], // MPL_cal data
+            borderWidth: 1,
+            fill: false
+        }, {
+            label: 'OC_cal',
+            yAxisID: 'y',
+            borderColor: 'red',
+            data: [], // OC_cal data
             borderWidth: 1,
             fill: false
         }]
@@ -18,16 +25,14 @@ var mplChart = new Chart(mplCtx, {
             x: {
                 title: {
                     display: true,
-                    text: 'MPL_dis'
+                    text: 'Distance (MPL_dis and dis)'
                 },
-                type: 'linear',
-                min: 3657.468017578125,
-                max: 4257.052734375
+                type: 'linear'
             },
             y: {
                 title: {
                     display: true,
-                    text: 'MPL_cal'
+                    text: 'Calibration Values'
                 }
             }
         },
@@ -47,52 +52,28 @@ var mplChart = new Chart(mplCtx, {
     }
 });
 
+function fetchDataAndUpdateChart(selectedData) {
+    fetch('http://192.168.2.190:5000/data/ALiN/' + selectedData)
+        .then(response => response.json())
+        .then(data => {
+            // Clear previous chart data
+            combinedChart.data.labels = [];
+            combinedChart.data.datasets[0].data = [];
+            combinedChart.data.datasets[1].data = [];
 
+            // Insert new data into the chart
+            data.forEach(item => {
+                combinedChart.data.labels.push(...item.MPL_dis, ...item.dis);
+                combinedChart.data.datasets[0].data.push(...item.MPL_cal);
+                combinedChart.data.datasets[1].data.push(...item.OC_cal);
+            });
+            combinedChart.update();
+        })
+        .catch(error => console.error('Error fetching data:', error));
+}
 
-// สร้างแผนภูมิ OC_cal เป็นแกน y และ dis เป็นแกน x
-var ocCtx = document.getElementById('ocChart').getContext('2d');
-var ocChart = new Chart(ocCtx, {
-    type: 'line',
-    data: {
-        labels: [], // ลิสต์ของชื่อของแต่ละช่วงเวลา
-        datasets: [{
-            label: 'OC_cal',
-            data: [], // ข้อมูล OC_cal จาก API
-            borderColor: 'red',
-            borderWidth: 1,
-            fill: false
-        }]
-    },
-    options: {
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'dis'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'OC_cal'
-                }
-            }
-        }
-    },
-    plugins: {
-        zoom: {
-            zoom: {
-                wheel: {
-                    enabled: true,
-                },
-                pinch: {
-                    enabled: true,
-                },
-                mode: 'xy'
-            }
-        }
-    }
-});
+// Call search function when the page loads
+search();
 
 function formatDate(timestamp) {
     // Assuming timestamp is in the format "YYYYMMDDHHMM"

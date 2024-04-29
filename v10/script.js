@@ -94,6 +94,57 @@ var ocChart = new Chart(ocCtx, {
     }
 });
 
+var combinedCtx = document.getElementById('combinedChart').getContext('2d');
+var combinedChart = new Chart(combinedCtx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Combined Data',
+            data: [],
+            borderColor: 'green',
+            borderWidth: 1,
+            fill: false
+        }]
+    },
+    options: {
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'dis'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Calculated Values'
+                }
+            }
+        },
+        plugins: {
+            zoom: {
+                zoom: {
+                    wheel: {
+                        enabled: true,
+                    },
+                    pinch: {
+                        enabled: true,
+                    },
+                    mode: 'xy'
+                }
+            }
+        }
+    }
+});
+
+function updateCombinedChart(data) {
+    combinedChart.data.labels = data.map(item => item.dis);
+    combinedChart.data.datasets[0].data = data.map(item => item.OC_cal + item.MPL_cal);
+    combinedChart.update();
+}
+
+
 function formatDate(timestamp) {
     // Assuming timestamp is in the format "YYYYMMDDHHMM"
     const year = timestamp.substring(0, 4);
