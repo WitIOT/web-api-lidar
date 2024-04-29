@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Line Chart from JSON API</title>
+    <!-- นำเข้า Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <link rel="stylesheet" href="cs.css">
+</head>
+<body>
+    <div class="search-container">
+        <div class="collection-name" id="collectionName"></div>
+        <input type="text" id="searchInput" placeholder="ค้นหา...">
+        <button onclick="search()">SEARCH</button>
+        <div class="dropdown" id="dropdown">
+            <button class="dropbtn">เลือกข้อมูล</button>
+            <div class="dropdown-content" id="dropdownContent">
+                <!-- สร้าง dropdown ที่จะแสดงข้อมูล -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="chart-container">
+            <canvas id="mplChart" width="600" height="450"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="ocChart" width="600" height="450"></canvas>
+        </div>
+    </div>
+    <!-- สคริปต์ JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
