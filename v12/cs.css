@@ -1,12 +1,18 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .chart-container {
     width: 100%;
     aspect-ratio: 4 / 3; 
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .search-container {
@@ -14,6 +20,8 @@
     align-items: center;
     justify-content: space-between; /* ปรับเพื่อจัดตำแหน่งปุ่มและ dropdown ให้อยู่ด้านขวา */
     margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .search-container input[type="text"] {
@@ -28,11 +36,15 @@
     border: none;
     cursor: pointer;
     margin-right: 100px; /* เพิ่มระยะห่างขวา */
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .dropdown {
     position: relative;
     display: inline-block;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .dropdown-content {
@@ -42,6 +54,8 @@
     min-width: 260px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .dropdown-content a {
@@ -49,17 +63,70 @@
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .dropdown-content a:hover {
     background-color: #f1f1f1;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .collection-name {
     font-size: 18px;
     font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+.navbar a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+.navbar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+#logo {
+    height: 100px;
+    width: 100px;
 }
