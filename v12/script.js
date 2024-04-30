@@ -6,7 +6,7 @@ var mplChart = new Chart(mplCtx, {
     data: {
         labels: [], // Labels from API
         datasets: [{
-            label: 'MPL_cal',
+            label: 'MPL',
             data: [], // Data from API
             borderColor: 'blue',
             borderWidth: 1,
@@ -18,34 +18,23 @@ var mplChart = new Chart(mplCtx, {
             x: {
                 title: {
                     display: true,
-                    text: 'MPL_dis'
+                    text: 'DIGITIZER SIGNAL' // Label for x-axis
                 },
-                type: 'linear',
-                min: 3657.468017578125,
-                max: 4257.052734375
+                type: 'linear', // Ensures values are treated as numerical
             },
             y: {
                 title: {
                     display: true,
-                    text: 'MPL_cal'
-                }
-            }
-        },
-        plugins: {
-            zoom: {
-                zoom: {
-                    wheel: {
-                        enabled: true,
-                    },
-                    pinch: {
-                        enabled: true,
-                    },
-                    mode: 'xy'
-                }
+                    text: 'DISTANCE (m)' // Label for y-axis
+                },
+                type: 'linear', // Ensures values are treated as numerical
+                min: 0,
+                max:5000
             }
         }
     }
 });
+
 
 
 
@@ -54,10 +43,10 @@ var ocCtx = document.getElementById('ocChart').getContext('2d');
 var ocChart = new Chart(ocCtx, {
     type: 'line',
     data: {
-        labels: [], // ลิสต์ของชื่อของแต่ละช่วงเวลา
+        labels: [], // Labels from API
         datasets: [{
-            label: 'OC_cal',
-            data: [], // ข้อมูล OC_cal จาก API
+            label: 'ALiN',
+            data: [], // Data from API
             borderColor: 'red',
             borderWidth: 1,
             fill: false
@@ -68,27 +57,19 @@ var ocChart = new Chart(ocCtx, {
             x: {
                 title: {
                     display: true,
-                    text: 'dis'
-                }
+                    text: 'DIGITIZER SIGNAL' // Label for x-axis
+                },
+                type: 'linear', // Ensures values are treated as numerical
+                min: 0
             },
             y: {
                 title: {
                     display: true,
-                    text: 'OC_cal'
-                }
-            }
-        }
-    },
-    plugins: {
-        zoom: {
-            zoom: {
-                wheel: {
-                    enabled: true,
+                    text: 'DISTANCE (m)' // Label for y-axis
                 },
-                pinch: {
-                    enabled: true,
-                },
-                mode: 'xy'
+                type: 'linear', // Ensures values are treated as numerical
+                min: 0,
+                max: 5000
             }
         }
     }
@@ -106,8 +87,7 @@ function formatDate(timestamp) {
     return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
-function search() {
-    const input = document.getElementById('searchInput').value;
+function search1() {
     fetch('http://192.168.2.190:5000/collections/ALiN')
         .then(response => response.json())
         .then(data => {
@@ -116,7 +96,6 @@ function search() {
             data.forEach(item => {
                 const option = document.createElement('a');
                 option.href = '#';
-                // Extract timestamp and reformat
                 const timestamp = item.split('_')[1]; // Assuming item is like "ALiN_202404032035"
                 const formattedDate = formatDate(timestamp);
                 option.textContent = `ALiN_${formattedDate}`;
@@ -130,6 +109,7 @@ function search() {
         })
         .catch(error => console.error('Error fetching data:', error));
 }
+
 
 
 // ฟังก์ชันสำหรับดึงข้อมูล JSON จาก API และอัพเดทแผนภูมิ MPL_cal และ OC_cal
@@ -149,17 +129,17 @@ function fetchDataAndUpdateChart(selectedData) {
             ocChart.data.datasets[0].data = [];
             // ใส่ข้อมูลลงใน labels และ datasets
             data.forEach(item => {
-                item.MPL_dis.forEach((value, index) => {
+                item.MPL_cal.forEach((value, index) => {
                     if (!mplChart.data.labels.includes(value)) {
                         mplChart.data.labels.push(value);
                     }
-                    mplChart.data.datasets[0].data.push(item.MPL_cal[index]);
+                    mplChart.data.datasets[0].data.push(item.MPL_dis[index]);
                 });
-                item.dis.forEach((value, index) => {
+                item.OC_cal.forEach((value, index) => {
                     if (!ocChart.data.labels.includes(value)) {
                         ocChart.data.labels.push(value);
                     }
-                    ocChart.data.datasets[0].data.push(item.OC_cal[index]);
+                    ocChart.data.datasets[0].data.push(item.dis[index]);
                 });
             });
             // อัพเดทแผนภูมิ
@@ -172,4 +152,4 @@ function fetchDataAndUpdateChart(selectedData) {
 }
 
 // เรียกใช้งานฟังก์ชันค้นหาเมื่อเว็บโหลดเสร็จ
-search();
+search1();

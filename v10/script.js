@@ -54,10 +54,10 @@ var ocCtx = document.getElementById('ocChart').getContext('2d');
 var ocChart = new Chart(ocCtx, {
     type: 'line',
     data: {
-        labels: [], // ลิสต์ของชื่อของแต่ละช่วงเวลา
+        labels: [], // Labels from API
         datasets: [{
             label: 'OC_cal',
-            data: [], // ข้อมูล OC_cal จาก API
+            data: [], // Data from API
             borderColor: 'red',
             borderWidth: 1,
             fill: false
@@ -69,56 +69,12 @@ var ocChart = new Chart(ocCtx, {
                 title: {
                     display: true,
                     text: 'dis'
-                }
+                },
             },
             y: {
                 title: {
                     display: true,
                     text: 'OC_cal'
-                }
-            }
-        }
-    },
-    plugins: {
-        zoom: {
-            zoom: {
-                wheel: {
-                    enabled: true,
-                },
-                pinch: {
-                    enabled: true,
-                },
-                mode: 'xy'
-            }
-        }
-    }
-});
-
-var combinedCtx = document.getElementById('combinedChart').getContext('2d');
-var combinedChart = new Chart(combinedCtx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Combined Data',
-            data: [],
-            borderColor: 'green',
-            borderWidth: 1,
-            fill: false
-        }]
-    },
-    options: {
-        scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'dis'
-                }
-            },
-            y: {
-                title: {
-                    display: true,
-                    text: 'Calculated Values'
                 }
             }
         },
@@ -138,11 +94,11 @@ var combinedChart = new Chart(combinedCtx, {
     }
 });
 
-function updateCombinedChart(data) {
-    combinedChart.data.labels = data.map(item => item.dis);
-    combinedChart.data.datasets[0].data = data.map(item => item.OC_cal + item.MPL_cal);
-    combinedChart.update();
-}
+// function updateCombinedChart(data) {
+//     combinedChart.data.labels = data.map(item => item.dis);
+//     combinedChart.data.datasets[0].data = data.map(item => item.OC_cal + item.MPL_cal);
+//     combinedChart.update();
+// }
 
 
 function formatDate(timestamp) {
