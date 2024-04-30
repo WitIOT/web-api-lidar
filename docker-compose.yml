@@ -1,37 +1,15 @@
 version: '3'
 services:
-  web:
-    container_name: web-chart-v9
-    # image: v9:1.15.7.4
-    image: v8-edit:1.0
-    ports:
-      - "80:80"
-    restart: always
-
-  web2:
-    container_name: web-chart-v1
-    image: v9:1.15.8.3.9
-    ports:
-      - "88:80"
-    restart: always
-
-  web3:
-    container_name: web-chart-v9.2
-    image: v9:1.15.8.4
-    ports:
-      - "90:80"
-    restart: always
-  
-  web4:
-    container_name: web-chart-v9.3
-    image: v9-2:1.1
-    ports:
-      - "85:80"
-    restart: always
-  
-  # flask-api:
-  #   container_name: flask-api
-  #   image: wittayakum/py-api-mongo
+  # web:
+  #   container_name: web-chart-v9
+  #   image: v9:1.15.7.4
   #   ports:
-  #     - "5000:5000"
+  #     - "80:80"
   #   restart: always
+  
+  flask-api:
+    container_name: flask-api
+    image: wittayakum/py-api-mongo-local:2
+    ports:
+      - "5000:5000"
+    restart: always

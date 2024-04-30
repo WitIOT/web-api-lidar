@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 # MongoDB configuration
-client = MongoClient("mongodb://root:12345678@192.168.2.190:27017/")
+client = MongoClient("mongodb://root:12345678@localhost:27017/")
 
 # Define route to list all databases
 @app.route('/databases')

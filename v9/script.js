@@ -108,7 +108,8 @@ function formatDate(timestamp) {
 
 function search() {
     const input = document.getElementById('searchInput').value;
-    fetch('http://192.168.2.190:5000/collections/ALiN')
+    // fetch('http://192.168.2.190:5000/collections/ALiN')
+    fetch('http://localhost:5000/collections/ALiN')
         .then(response => response.json())
         .then(data => {
             const dropdownContent = document.getElementById('dropdownContent');
@@ -134,7 +135,8 @@ function search() {
 
 // ฟังก์ชันสำหรับดึงข้อมูล JSON จาก API และอัพเดทแผนภูมิ MPL_cal และ OC_cal
 function fetchDataAndUpdateChart(selectedData) {
-    fetch('http://192.168.2.190:5000/data/ALiN/' + selectedData)
+    // fetch('http://192.168.2.190:5000/data/ALiN/' + selectedData)
+    fetch('http://localhost:5000/data/ALiN/' + selectedData)
         .then(response => {
             if (!response.ok) {
                 throw new Error('ไม่สามารถดึงข้อมูล API ได้');

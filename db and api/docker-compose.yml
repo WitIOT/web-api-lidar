@@ -23,15 +23,7 @@ services:
         ME_CONFIG_BASICAUTH_USERNAME: admin
         ME_CONFIG_BASICAUTH_PASSWORD: 1234
         ME_CONFIG_MONGODB_SERVER: mongodb
-  
-  grafana:
-    container_name: grafana
-    image:  grafana/grafana-oss
-    restart: always
-    ports:
-      - "3000:3000"
-
-
+        
 volumes:
   mongodb_data:
   influxdb_data:
