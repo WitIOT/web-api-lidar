@@ -14,6 +14,7 @@ var mplChart = new Chart(mplCtx, {
         }]
     },
     options: {
+        animation: false, // ปิดการใช้งานแอนิเมชัน
         scales: {
             x: {
                 title: {
@@ -28,8 +29,8 @@ var mplChart = new Chart(mplCtx, {
                     text: 'DISTANCE (m)' // Label for y-axis
                 },
                 type: 'linear', // Ensures values are treated as numerical
-                min: 0,
-                max:5000
+                // min: 0,
+                // max:5000
             }
         }
     }
@@ -53,6 +54,7 @@ var ocChart = new Chart(ocCtx, {
         }]
     },
     options: {
+        animation: false, // ปิดการใช้งานแอนิเมชัน
         scales: {
             x: {
                 title: {
@@ -60,7 +62,7 @@ var ocChart = new Chart(ocCtx, {
                     text: 'DIGITIZER SIGNAL' // Label for x-axis
                 },
                 type: 'linear', // Ensures values are treated as numerical
-                min: 0
+                // min: 0
             },
             y: {
                 title: {
@@ -68,8 +70,8 @@ var ocChart = new Chart(ocCtx, {
                     text: 'DISTANCE (m)' // Label for y-axis
                 },
                 type: 'linear', // Ensures values are treated as numerical
-                min: 0,
-                max: 5000
+                // min: 0,
+                // max: 5000
             }
         }
     },
@@ -127,7 +129,7 @@ function formatDate(timestamp) {
 // }
 
 function search1() {
-    fetch('http://192.168.2.190:5000/collections/ALiN')
+    fetch('http://192.168.2.190:5000/collections/ALiN2')
         .then(response => response.json())
         .then(data => {
             const dropdownContent = document.getElementById('dropdownContent');
@@ -156,7 +158,7 @@ function search1() {
                         fetchDataAndUpdateChart(selectedCollection);
                     };
                     dropdownContent.appendChild(option);
-                    if (timestamp === '202404032035') { // ตั้งค่าเริ่มต้นให้เลือกข้อมูลนี้
+                    if (timestamp === '202405011343') { // ตั้งค่าเริ่มต้นให้เลือกข้อมูลนี้ def= 202404032035
                         option.click(); // Simulate click to select and fetch data
                     }
                 }
@@ -173,7 +175,7 @@ function search1() {
 
 // ฟังก์ชันสำหรับดึงข้อมูล JSON จาก API และอัพเดทแผนภูมิ MPL_cal และ OC_cal
 function fetchDataAndUpdateChart(selectedData) {
-    fetch('http://192.168.2.190:5000/data/ALiN/' + selectedData)
+    fetch('http://192.168.2.190:5000/data/ALiN2/' + selectedData)
     // fetch('http://localhost:5000/data/ALiN/' + selectedData)
         .then(response => {
             if (!response.ok) {
