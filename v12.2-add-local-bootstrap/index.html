@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Line Chart from JSON API</title>
     <!-- นำเข้า Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="cs.css">
+    <script src="lib/chart.js"></script>
+    <link rel="stylesheet" href="css/cs.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="jquery.slim.min.js"></script>
-    <script src="popper.min.js"></script>
+    <script src="lib/jquery.slim.min.js"></script>
+    <script src="lib/popper.min.js"></script>
     <script src="js/bootstrap.js"></script>
+    <script src="lib/xlsx.full.min.js"></script>
+
 </head>
 <body>
     <div class="navbar navbar-expand-sm" >
@@ -21,6 +24,8 @@
     <div class="search-container">
         <!-- <input type="text" id="searchInput" placeholder="ค้นหา..."> -->
         <!-- <button onclick="search()">SEARCH</button> -->
+        <button id="downloadExcelButton" onclick="downloadExcel()">Download as Excel</button>
+        <button id="downloadButton" onclick="downloadData()">Download as Json</button>
         <div class="dropdown" id="dropdown">
             <button onclick="search1()">SelectData</button>
             <div class="dropdown-content" id="dropdownContent">
@@ -32,20 +37,20 @@
         <div class="collection-name" id="collectionName"></div>
         <div class="container" id="container">
             <div class="chart-container" id="c1">
-                <canvas id="mplChart" width="600" height="650"></canvas>
+                <canvas id="mplChart" width="600" height="670"></canvas>
             </div>
             <div class="chart-container" id="c2">
-                <canvas id="ocChart" width="600" height="650"></canvas>
+                <canvas id="ocChart" width="600" height="670"></canvas>
             </div>
         </div>
     </div>
     <footer>
         <img src="NARIT.png" id="logo" >
-        <p>National Astronomical Research Institute Of Thailand (Public Organization)</p>
-        <p>260 Moo 4, DonKaew, A. Mae rim, Chiang Mai 50180 Thailand</p>
-        <p>Phone : (+66) 053-121268-9 Fax : (+66) 053-121250</p>
+        <p class="footer">National Astronomical Research Institute Of Thailand (Public Organization)</p>
+        <p class="footer">260 Moo 4, DonKaew, A. Mae rim, Chiang Mai 50180 Thailand</p>
+        <p class="footer">Phone : (+66) 053-121268-9 Fax : (+66) 053-121250</p>
     </footer>
     <!-- สคริปต์ JavaScript -->
-    <script src="script.js"></script>
+    <script src="lib/script.js"></script>
 </body>
 </html>

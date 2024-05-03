@@ -10,11 +10,15 @@
 }
 
 .chart-container {
-    width: auto;
+    /* width: auto;
     aspect-ratio: 4 / 3; 
     font-family: 'Roboto', sans-serif;
     flex: 1;            
-    padding: 10px;     
+    padding: 10px;      */
+
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
 }
 
 .search-container {
@@ -23,7 +27,7 @@
     justify-content: right; /* ปรับเพื่อจัดตำแหน่งปุ่มและ dropdown ให้อยู่ด้านขวา */
     margin-bottom: 20px;
     font-family: 'Roboto', sans-serif;
-    padding-top: 20px;
+    /* padding-top: 10px; */
     /* position: absolute;
     right: 10px; */
 }
@@ -140,6 +144,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    margin: 0;
 }
 
 #card-body {
@@ -178,4 +183,23 @@ body {
 
 #c1 {
     left: 10px;
+}
+p.footer{
+    line-height: 0.5;
+}
+
+@media (min-width: 1200px) {
+    .chart-container {
+        max-width: none;
+        width: 50%;
+    }
+}
+
+@media (min-width: 1920px) {
+    body {
+        font-size: 18px; /* Larger text for larger screens */
+    }
+    .chart-container {
+        width: 50%; /* Adjust chart width for larger displays */
+    }
 }
