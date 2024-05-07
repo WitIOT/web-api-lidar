@@ -3,6 +3,8 @@
 ## Overview
 This project provides a web-based visualization for Atmospheric LiDAR data, allowing users to view and analyze data through interactive charts. It includes features for downloading data in Excel and JSON formats, and options to select specific data sets for visualization.
 
+![Example Image](https://example.com/image.png)
+
 ## Features
 - **Visualization of LiDAR Data:** Interactive line charts displaying data from a JSON API.
 - **Data Download:** Users can download the data as Excel files or JSON.
