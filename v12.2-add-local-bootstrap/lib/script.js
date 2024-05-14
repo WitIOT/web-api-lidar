@@ -142,7 +142,7 @@ function formatDate(timestamp) {
 // }
 
 function search1(){
-    fetch('http://192.168.2.190:5000/collections/ALiN_Cheer')
+    fetch('http://192.168.2.190:5000/collections/ALiN')
     .then(response => response.json())
     .then(data => {
         const dropdownContent = document.getElementById('dropdownContent');
@@ -186,8 +186,8 @@ function search1(){
 
 // ฟังก์ชันสำหรับดึงข้อมูล JSON จาก API และอัพเดทแผนภูมิ MPL_cal และ OC_cal
 function fetchDataAndUpdateChart(selectedData) {
-    fetch('http://192.168.2.190:5000/data/ALiN_Cheer/' + selectedData)
-    // fetch('http://localhost:5000/data/ALiN/' + selectedData)
+    // fetch('http://192.168.2.190:5000/data/ALiN_Cheer/' + selectedData)
+    fetch('http://192.168.2.190:5000/data/ALiN/' + selectedData)
         .then(response => {
             if (!response.ok) {
                 throw new Error('ไม่สามารถดึงข้อมูล API ได้');
@@ -231,7 +231,7 @@ function downloadData() {
         return;
     }
 
-    const apiUrl = 'http://192.168.2.190:5000/data/ALiN_Cheer/' + selectedCollection;
+    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + selectedCollection;
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
@@ -255,7 +255,7 @@ function downloadExcel() {
         return;
     }
 
-    const apiUrl = 'http://192.168.2.190:5000/data/ALiN_Cheer/' + selectedCollection;
+    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + selectedCollection;
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {

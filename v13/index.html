@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Line Chart from JSON API</title>
+    <!-- นำเข้า Chart.js -->
+    <script src="lib/chart.js"></script>
+    <link rel="stylesheet" href="css/cs.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="lib/jquery.slim.min.js"></script>
+    <script src="lib/popper.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="lib/xlsx.full.min.js"></script>
+
+</head>
+<body>
+    <div class="navbar navbar-expand-sm" >
+        <img src="NARIT.png" id="nav-logo">
+        <a href="index.html" id="font-logo">Atmospheric LiDAR</a>
+    </div>
+    <div class="search-container">
+        <!-- <input type="text" id="searchInput" placeholder="ค้นหา..."> -->
+        <!-- <button onclick="search()">SEARCH</button> -->
+        <button id="downloadExcelButton" onclick="downloadExcel()">Download as Excel</button>
+        <button id="downloadButton" onclick="downloadData()">Download as Json</button>
+        <div class="dropdown" id="dropdown">
+            <button onclick="search1()">SelectData</button>
+            <div class="dropdown-content" id="dropdownContent">
+                <!-- สร้าง dropdown ที่จะแสดงข้อมูล -->
+            </div>
+        </div>
+    </div>
+    <div class="card bg-light text-dark" id="card-body">
+        <div class="collection-name" id="collectionName"></div>
+        <div class="container" id="container">
+            <div class="chart-container" id="c1">
+                <canvas id="newChart" width="600" height="670"></canvas>
+            </div>            
+        </div>
+    </div>
+    <footer>
+        <img src="img/NARIT.png" id="logo" >
+        <p class="footer">National Astronomical Research Institute Of Thailand (Public Organization)</p>
+        <p class="footer">260 Moo 4, DonKaew, A. Mae rim, Chiang Mai 50180 Thailand</p>
+        <p class="footer">Phone : (+66) 053-121268-9 Fax : (+66) 053-121250</p>
+    </footer>
+    <!-- สคริปต์ JavaScript -->
+    <script src="lib/script.js"></script>
+</body>
+</html>
