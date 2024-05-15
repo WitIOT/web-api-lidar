@@ -41,7 +41,7 @@ function search1(){
                 document.getElementById('collectionName').textContent = 'Data experiment: ' + option.textContent;
                 // fetchDataAndUpdateChart(selectedCollection);
                 // เรียกใช้ฟังก์ชั่นดึงข้อมูลและอัปเดตแผนภูมิ
-                fetchData(selectedCollection,updateChart);
+                fetchData(selectedCollection);
 
             };
             dropdownContent.appendChild(option);
@@ -57,6 +57,7 @@ function search1(){
 }
 
 function fetchData(selectedData, callback) {
+    document.getElementById('loadingMessage').style.display = 'block';
     fetch(`http://192.168.2.190:5000/data/ALiN/${selectedData}`)
         .then(response => response.json())
         .then(data => {
@@ -83,12 +84,20 @@ function fetchData(selectedData, callback) {
                     }
                 });
             });
-
+            document.getElementById('loadingMessage').style.display = 'none';
             // callback(mplCalValues, mplDisValues, ocCalValues, ocDisValues);
             renderZoomableChart(ocCalValues, ocDisValues);
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Hide loading message even if there is an error
+            document.getElementById('loadingMessage').style.display = 'none';
+        })    
 }
+
+document.getElementById('resetZoom').addEventListener('click', function() {
+    Chart.resetZoom();
+});
 
 function renderZoomableChart(ocCalValues, ocDisValues) {
     const ctx = document.getElementById('chart-container').getContext('2d');
@@ -105,26 +114,10 @@ function renderZoomableChart(ocCalValues, ocDisValues) {
             }]
         },
         options: {
-            options: {
-                scales: {
-                    x: {
-                        type: 'linear',
-                        title: {
-                            display: true,
-                            text: 'DIGITIZER SIGNEL' // ชื่อแกน X
-                        },
-                        min: 0
-                    },
-                    y: {
-                        type: 'linear',
-                        beginAtZero: true, // ตั้งค่าให้แกน Y เริ่มที่ 0
-                        title: {
-                            display: true,
-                            text: 'Distance (m)' // ชื่อแกน Y
-                        },
-                        min: 0,
-                        max: 5000
-                    }
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom'
                 }
             },
             plugins: {

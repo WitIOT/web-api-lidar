@@ -3,16 +3,26 @@ let ocDisValues = [];
 let ocCalValues = [];
 
 // ฟังก์ชั่นในการสร้างกราฟด้วย FusionCharts
-function createChart(ocCalValues, ocDisValues) {
+function createChart(mplCalValues, mplDisValues, ocCalValues, ocDisValues) {
+    console.log('Creating chart with values:', mplCalValues, mplDisValues, ocCalValues, ocDisValues); // พิมพ์ข้อมูลที่ส่งไปยัง FusionCharts
+    
+    var data = mplCalValues.map((x, i) => ({
+        "label": x.toString(),
+        "value": mplDisValues[i].toString()
+    })).concat(ocCalValues.map((x, i) => ({
+        "label": x.toString(),
+        "value": ocDisValues[i].toString()
+    })));
+    
     var chartConfig = {
-        type: 'zoomline',
+        type: 'line',
         renderAt: 'c1',
         width: '100%',
         height: '500',
         dataFormat: 'json',
         dataSource: {
             "chart": {
-                "caption": "Line Chart",
+                "caption": "OSC",
                 "xAxisName": "DIGITIZER SIGNAL",
                 "yAxisName": "Distance (m)",
                 "theme": "fusion",
@@ -20,10 +30,7 @@ function createChart(ocCalValues, ocDisValues) {
                 "yAxisMaxValue": "5000",
                 "xAxisMinValue": "0"
             },
-            "data": ocCalValues.map((x, i) => ({
-                "label": x.toString(),
-                "value": ocDisValues[i].toString()
-            }))
+            "data": data
         }
     };
 
@@ -32,6 +39,7 @@ function createChart(ocCalValues, ocDisValues) {
         fusionChart.render();
     });
 }
+
 
 function formatDate(timestamp) {
     const year = timestamp.substring(0, 4);
@@ -101,9 +109,40 @@ function fetchData(selectedData, callback) {
             console.log('MPL Dis Values:', mplDisValues);
             console.log('OC Cal Values:', ocCalValues);
             console.log('OC Dis Values:', ocDisValues);
-            callback(ocCalValues, ocDisValues);
+            callback(ocCalValues, ocDisValues, mplCalValues, mplDisValues);
         })
         .catch(error => console.error('Error fetching data:', error));
+}
+
+search1 = function() {
+    fetch('http://192.168.2.190:5000/collections/ALiN')
+    .then(response => response.json())
+    .then(data => {
+        const dropdownContent = document.getElementById('dropdownContent');
+        dropdownContent.innerHTML = ''; // Clear previous dropdown content
+        data.sort((a, b) => {
+            const timestampA = a.split('_')[1];
+            const timestampB = b.split('_')[1];
+            return timestampB.localeCompare(timestampA); // Sort in descending order
+        });
+        data.forEach((item, index) => {
+            const timestamp = item.split('_')[1];
+            const formattedDate = formatDate(timestamp);
+            const option = document.createElement('a');
+            option.href = '#';
+            option.textContent = `ALiN_${formattedDate}`;
+            option.onclick = function() {
+                selectedCollection = `ALiN_${timestamp}`;
+                document.getElementById('collectionName').textContent = 'Data experiment: ' + option.textContent;
+                fetchData(selectedCollection, createChart);
+            };
+            dropdownContent.appendChild(option);
+            if (index === 0) { 
+                option.click();
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
 }
 
 function downloadData() {
