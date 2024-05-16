@@ -80,84 +80,6 @@ function formatDate(timestamp) {
     return `${year}-${month}-${day} ${hour}:${minute}`;
 }
 
-function search1(){
-    fetch('http://192.168.2.190:5000/collections/ALiN')
-    .then(response => response.json())
-    .then(data => {
-        const dropdownContent = document.getElementById('dropdownContent');
-        dropdownContent.innerHTML = ''; // Clear previous dropdown content
-
-        // Sort data from new to old
-        data.sort((a, b) => {
-            const timestampA = a.split('_')[1];
-            const timestampB = b.split('_')[1];
-            return timestampB.localeCompare(timestampA); // Sort in descending order
-        });
-
-        // Add sorted data to dropdown and automatically select the latest one
-        data.forEach((item, index) => {
-            const timestamp = item.split('_')[1];
-            const formattedDate = formatDate(timestamp);
-            const option = document.createElement('a');
-            option.href = '#';
-            option.textContent = `ALiN_${formattedDate}`;
-            option.onclick = function() {
-                selectedCollection = `ALiN_${timestamp}`;
-                document.getElementById('collectionName').textContent = 'Data experiment: ' + option.textContent;
-                // fetchDataAndUpdateChart(selectedCollection);
-                // เรียกใช้ฟังก์ชั่นดึงข้อมูลและอัปเดตแผนภูมิ
-                fetchData(selectedCollection, updateChart);
-
-            };
-            dropdownContent.appendChild(option);
-            // Automatically click on the first (newest) timestamp
-            if (index === 0) { 
-                option.click();
-            }
-        });
-    })
-    .catch(error => console.error('Error fetching data:', error));
-// }
-
-}
-
-// function fetchDataAndUpdateChart(selectedData) {
-//     fetch(`http://192.168.2.190:5000/data/ALiN/${selectedData}`)
-//         .then(response => response.json())
-//         .then(data => {
-//             combinedChart.data.labels = [];
-//             combinedChart.data.datasets[0].data = [];
-//             combinedChart.data.datasets[1].data = [];
-            
-//             data.forEach(item => {
-//                 item.MPL_cal.forEach((value, index) => {
-//                     combinedChart.data.labels.push(value);
-//                     combinedChart.data.datasets[0].data.push(item.MPL_dis[index]);
-//                 });
-//                 item.OC_cal.forEach((value, index) => {
-//                     if (!combinedChart.data.labels.includes(value)) {
-//                         combinedChart.data.labels.push(value);
-//                     }
-//                     combinedChart.data.datasets[1].data.push(item.dis[index]);
-//                 });
-
-//                 // Ensure each data set starts at zero if not already
-//                 if (combinedChart.data.datasets[1].data[0] !== 0) {
-//                     combinedChart.data.datasets[1].data.unshift(0); // Add a zero at the start
-//                     combinedChart.data.labels.unshift(combinedChart.data.labels[0] - 1); // Adjust labels accordingly
-//                 }
-//             });
-
-//             // Update the x-axis to accommodate all data
-//             combinedChart.options.scales.x.min = Math.min(...combinedChart.data.labels);
-//             combinedChart.options.scales.x.max = Math.max(...combinedChart.data.labels);
-
-//             combinedChart.update();
-//         })
-//         .catch(error => console.error('Error fetching data:', error));
-// }
-
-
 function fetchData(selectedData, callback) {
     document.getElementById('loadingMessage').style.display = 'block';
     fetch(`http://192.168.2.190:5000/data/ALiN/${selectedData}`)
@@ -244,6 +166,85 @@ function updateChart(mplCalValues, mplDisValues, ocCalValues, ocDisValues) {
     newChart.update();
 }
 
+function fetchDatesAndTimes() {
+    fetch('http://192.168.2.190:5000/collections/ALiN')
+    .then(response => response.json())
+    .then(data => {
+        const dateSelect = document.getElementById('dateSelect');
+        dateSelect.innerHTML = '';  // ล้าง dropdown date
+
+        const dates = {};
+
+        // จัดระเบียบข้อมูลตามวันที่และเวลา
+        data.forEach(item => {
+            const [prefix, timestamp] = item.split('_');
+            const date = timestamp.substring(0, 8);
+            const time = timestamp.substring(8, 12);
+
+            if (!dates[date]) {
+                dates[date] = [];
+            }
+            dates[date].push(time);
+        });
+
+        // เรียงวันที่ในลำดับจากใหม่ไปเก่า
+        const sortedDates = Object.keys(dates).sort((a, b) => b.localeCompare(a));
+
+        // เติมข้อมูลใน dropdown สำหรับวันที่
+        sortedDates.forEach(date => {
+            const option = document.createElement('option');
+            option.value = date;
+            option.textContent = `${date.substring(0, 4)}-${date.substring(4, 6)}-${date.substring(6, 8)}`;
+            dateSelect.appendChild(option);
+        });
+
+        // อัปเดต dropdown สำหรับเวลาโดยอัตโนมัติสำหรับวันที่แรก
+        updateTimeDropdown();
+    })
+    .catch(error => console.error('Error fetching dates:', error));
+}
+
+function updateTimeDropdown() {
+    const dateSelect = document.getElementById('dateSelect');
+    const selectedDate = dateSelect.value;
+    const timeSelect = document.getElementById('timeSelect');
+    timeSelect.innerHTML = '';
+
+    fetch('http://192.168.2.190:5000/collections/ALiN')
+    .then(response => response.json())
+    .then(data => {
+        const times = data
+            .filter(item => item.includes(selectedDate))
+            .map(item => item.split('_')[1].substring(8, 12))
+            .sort((a, b) => b.localeCompare(a));
+
+        // เติมข้อมูลใน dropdown สำหรับเวลา
+        times.forEach(time => {
+            const option = document.createElement('option');
+            option.value = time;
+            option.textContent = `${time.substring(0, 2)}:${time.substring(2, 4)}`;
+            timeSelect.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Error fetching times:', error));
+}
+
+function search() {
+    const dateSelect = document.getElementById('dateSelect');
+    const timeSelect = document.getElementById('timeSelect');
+    const dataExperiment = document.getElementById('dataExperiment');
+
+    const selectedDate = dateSelect.value;
+    const selectedTime = timeSelect.value;
+    selectedCollection = `ALiN_${selectedDate}${selectedTime}`;
+
+    dataExperiment.value = selectedCollection;
+
+    fetchData(selectedCollection, updateChart);
+    // downloadData(selectedCollection);
+    // downloadExcel(selectedCollection);
+}
+
 function downloadData() {
     if (!selectedCollection) {
         alert('Please select a data collection first.');
@@ -313,10 +314,23 @@ function downloadExcel() {
         });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    fetchDatesAndTimes();
 
+    // Add event listener to date dropdown to update time dropdown when a date is selected
+    const dateSelect = document.getElementById('dateSelect');
+    dateSelect.addEventListener('change', updateTimeDropdown);
 
+    // const timeSelect = document.getElementById('timeSelect');
+    // timeSelect.addEventListener('change', search);
+    const searchButton = document.querySelector('button[type="submit"]');
+    searchButton.addEventListener('click', function(event) {
+        event.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
+        search();
+    });
+});
 
 // เรียกใช้งานฟังก์ชันค้นหาเมื่อเว็บโหลดเสร็จ
-search1();
+// search1();
 // เรียกใช้ฟังก์ชั่นดึงข้อมูลและอัปเดตแผนภูมิ
 

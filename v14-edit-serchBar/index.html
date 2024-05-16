@@ -7,7 +7,7 @@
     <!-- นำเข้า Chart.js -->
     <script src="lib/chart.js"></script>
     <script src="lib/chartjs-plugin-zoom.min.js"></script>
-    <link rel="stylesheet" href="css/cs.css">
+    <link rel="stylesheet" href="css/styles.css">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -18,29 +18,38 @@
 
 </head>
 <body>
+
     <div class="navbar navbar-expand-sm" >
         <img src="NARIT.png" id="nav-logo">
         <a href="index.html" id="font-logo">Atmospheric LiDAR</a>
     </div>
-    <div class="search-container">
-        <!-- <input type="text" id="searchInput" placeholder="ค้นหา..."> -->
-        <!-- <button onclick="search()">SEARCH</button> -->
-        <button id="downloadExcelButton" onclick="downloadExcel()">Download as Excel</button>
-        <button id="downloadButton" onclick="downloadData()">Download as Json</button>
-        <div class="dropdown" id="dropdown">
-            <button onclick="search1()">SelectData</button>
-            <div class="dropdown-content" id="dropdownContent">
-                <!-- สร้าง dropdown ที่จะแสดงข้อมูล -->
-            </div>
-        </div>
+
+    <div class="card-serch">
+        <form class="forma">
+            <label>Date :</label>
+            <select id="dateSelect" name="date">
+                <!-- Options go here -->
+            </select>
+            <label>Time :</label>
+            <select id="timeSelect" name="time">
+                <!-- Options go here -->
+            </select>
+            <br>
+            <label>Data Experiment :</label>
+            <input type="text" id="dataExperiment" name="data-experiment">
+            <button type="submit">search</button>
+        </form>
     </div>
+
     <div class="card bg-light text-dark" id="card-body">
         <div id="loadingMessage">Wait for downloading...</div>
-        <div class="collection-name" id="collectionName"></div>
+        <!-- <div class="collection-name" id="collectionName"></div> -->
         <div class="container" id="container">
             <div class="chart-container" id="c1">
                 <canvas id="newChart" width="1280" height="1080"></canvas>
                 <button id="resetZoom">Reset Zoom</button>
+                <button id="downloadExcelButton" onclick="downloadExcel()">Download as Excel</button>
+                <button id="downloadButton" onclick="downloadData()">Download as Json</button>
             </div>
         </div>
     </div>
