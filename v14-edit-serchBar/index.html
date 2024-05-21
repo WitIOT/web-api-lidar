@@ -34,16 +34,17 @@
             <select id="timeSelect" name="time">
                 <!-- Options go here -->
             </select>
-            <br>
-            <label>Data Experiment :</label>
-            <input type="text" id="dataExperiment" name="data-experiment">
-            <button type="submit">search</button>
+            <label>   </label><button type="submit">search</button>
+            <!-- <br> -->
+            <!-- <label>Data Experiment :</label>
+            <input type="text" id="dataExperiment" name="data-experiment"> -->
         </form>
     </div>
 
     <div class="card bg-light text-dark" id="card-body">
         <div id="loadingMessage">Wait for downloading...</div>
         <!-- <div class="collection-name" id="collectionName"></div> -->
+        <label>Data Experiment : <input type="text" id="dataExperiment" name="data-experiment"></label>
         <div class="container" id="container">
             <div class="chart-container" id="c1">
                 <canvas id="newChart" width="1280" height="1080"></canvas>
