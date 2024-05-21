@@ -181,8 +181,29 @@ button {
     border-radius: 10px;
 }
 
+button:search_button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
 button:hover {
     background-color: #45a049;
+}
+
+input[type="number"] {
+    width: 80px; /* กำหนดความกว้างของ input fields ตามที่ต้องการ */
+    padding: 5px; /* กำหนด padding */
+    margin: 5px; /* กำหนด margin */
+    box-sizing: border-box; /* ทำให้ padding และ border รวมอยู่ในความกว้างของ element */
+}
+
+label:dataname {
+    text-align: center;
 }
 
 @media (min-width: 1920px) {

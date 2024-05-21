@@ -25,7 +25,7 @@
     </div>
 
     <div class="card-serch">
-        <form class="forma">
+        <form class="forma" id="searchForm">
             <label>Date :</label>
             <select id="dateSelect" name="date">
                 <!-- Options go here -->
@@ -34,19 +34,38 @@
             <select id="timeSelect" name="time">
                 <!-- Options go here -->
             </select>
-            <label>   </label><button type="submit">search</button>
-            <!-- <br> -->
-            <!-- <label>Data Experiment :</label>
-            <input type="text" id="dataExperiment" name="data-experiment"> -->
+            <label>   </label><button id="search_button" type="submit">search</button>
         </form>
     </div>
 
     <div class="card bg-light text-dark" id="card-body">
         <div id="loadingMessage">Wait for downloading...</div>
-        <!-- <div class="collection-name" id="collectionName"></div> -->
-        <label>Data Experiment : <input type="text" id="dataExperiment" name="data-experiment"></label>
+        <button id="toggleSettings">Show/Hide Settings</button>
+            <div id="settings" style="display: none;">
+            <div>
+                <label><input type="checkbox" id="showMPL" checked /> MPL</label>
+                <label><input type="checkbox" id="showALiN" checked /> ALiN</label>
+                ||
+                <label>DIGITIZER SIGNEL Min: <input type="number" id="xMin" value="0"></label>
+                <label>DIGITIZER SIGNEL Max: <input type="number" id="xMax" ></label>
+                <label>Distance Min: <input type="number" id="yMin" value="0"></label>
+                <label>Distance Max: <input type="number" id="yMax" value="5000"></label>
+                <button id="updateAxis">Update Axis</button>
+            </div>
+            </div>
+
+        <!-- <div>
+            <label>DIGITIZER SIGNEL Min:: <input type="number" id="xMin" value="0"></label>
+            <label>DIGITIZER SIGNEL Max: <input type="number" id="xMax" ></label>
+            <label>Distance Max: <input type="number" id="yMin" value="0"></label>
+            <label>Distance Max: <input type="number" id="yMax" value="5000"></label>
+            <button id="updateAxis">Update Axis</button>
+        </div> -->
         <div class="container" id="container">
             <div class="chart-container" id="c1">
+                <p></p>
+                <label id="dataname">Data Experiment : <b id="dataExperiment"></b></label>
+
                 <canvas id="newChart" width="1280" height="1080"></canvas>
                 <button id="resetZoom">Reset Zoom</button>
                 <button id="downloadExcelButton" onclick="downloadExcel()">Download as Excel</button>

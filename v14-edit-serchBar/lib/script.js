@@ -1,6 +1,7 @@
 var selectedCollection = ''; // เก็บชื่อ collection ที่เลือก
 let ocDisValues = [];
 let ocCalValues = [];
+var originalFormatCollection = "";
 
 var ctx = document.getElementById('newChart').getContext('2d'); // ตรวจสอบว่าได้เพิ่ม canvas ที่มี id 'newChart' ใน HTML ของคุณแล้ว
 var newChart = new Chart(ctx, {
@@ -23,7 +24,8 @@ var newChart = new Chart(ctx, {
                     display: true,
                     text: 'DIGITIZER SIGNEL' // ชื่อแกน X
                 },
-                min: 0
+                min: 0,
+                max: 5000
             },
             y: {
                 type: 'linear',
@@ -32,8 +34,7 @@ var newChart = new Chart(ctx, {
                     display: true,
                     text: 'Distance (m)' // ชื่อแกน Y
                 },
-                min: 0,
-                max: 5000
+                min: 0
             }
         },
         plugins: {
@@ -67,18 +68,10 @@ document.getElementById('resetZoom').addEventListener('click', function() {
     newChart.resetZoom();
 });
 
-
-function formatDate(timestamp) {
-    // Assuming timestamp is in the format "YYYYMMDDHHMM"
-    const year = timestamp.substring(0, 4);
-    const month = timestamp.substring(4, 6);
-    const day = timestamp.substring(6, 8);
-    const hour = timestamp.substring(8, 10);
-    const minute = timestamp.substring(10, 12);
-
-    // Format to "YYYY-MM-DD HH:MM"
-    return `${year}-${month}-${day} ${hour}:${minute}`;
-}
+document.getElementById('toggleSettings').addEventListener('click', function() {
+    const settingsDiv = document.getElementById('settings');
+    settingsDiv.style.display = settingsDiv.style.display === 'none' ? 'block' : 'none';
+});
 
 function fetchData(selectedData, callback) {
     document.getElementById('loadingMessage').style.display = 'block';
@@ -94,18 +87,17 @@ function fetchData(selectedData, callback) {
                 item.MPL_cal.forEach((value, index) => {
                     let mplDisValue = item.MPL_dis[index];
                     // Ensure MPL_dis value is between 0 and 5000
-                    if (mplDisValue >= 0 && mplDisValue <= 5000) {
-                        mplCalValues.push(value);
-                        mplDisValues.push(mplDisValue);
-                    }
+                    // if (mplDisValue >= 0 && mplDisValue <= 5000) {
+                    //     mplCalValues.push(value);
+                    //     mplDisValues.push(mplDisValue);
+                    // }
+                    mplCalValues.push(value);
+                    mplDisValues.push(mplDisValue);
                 });
                 item.OC_cal.forEach((value, index) => {
                     let ocDisValue = item.dis[index];
-                    // Optionally apply the same filter for OC data if needed
-                    if (ocDisValue >= 0 && ocDisValue <= 5000) {
-                        ocCalValues.push(value);
-                        ocDisValues.push(ocDisValue);
-                    }
+                    ocCalValues.push(value);
+                    ocDisValues.push(ocDisValue);
                 });
             });
             document.getElementById('loadingMessage').style.display = 'none';
@@ -119,50 +111,43 @@ function fetchData(selectedData, callback) {
         })        
 }
 
-
 function updateChart(mplCalValues, mplDisValues, ocCalValues, ocDisValues) {
+    const showMPL = document.getElementById('showMPL').checked;
+    const showALiN = document.getElementById('showALiN').checked;
+
+    const xMin = document.getElementById('xMin').value;
+    const xMax = document.getElementById('xMax').value;
+    const yMin = document.getElementById('yMin').value;
+    const yMax = document.getElementById('yMax').value;
+
     newChart.data.labels = mplCalValues.concat(ocCalValues); // assuming you want to show both on the same axis
-    newChart.data.datasets = [
-        {
+    newChart.data.datasets = [];
+
+    if (showMPL) {
+        newChart.data.datasets.push({
             label: 'MPL',
             data: mplDisValues,
             borderColor: 'blue',
             borderWidth: 1,
             fill: false
-        },
-        {
+        });
+    }
+
+    if (showALiN) {
+        newChart.data.datasets.push({
             label: 'ALiN',
             data: ocDisValues,
             borderColor: 'red',
             borderWidth: 1,
             fill: false
-        }
-    ];
+        });
+    }
 
-    newChart.options.scales.x.min = Math.min(...mplCalValues.concat(ocCalValues));
-    newChart.options.scales.x.max = Math.max(...mplCalValues.concat(ocCalValues));
-    newChart.options.scales.y.max = Math.max(...mplDisValues.concat(ocDisValues));
+    newChart.options.scales.x.min = xMin ? Number(xMin) : Math.min(...mplCalValues.concat(ocCalValues));
+    newChart.options.scales.x.max = xMax ? Number(xMax) : Math.max(...mplCalValues.concat(ocCalValues));
+    newChart.options.scales.y.min = yMin ? Number(yMin) : 0;
+    newChart.options.scales.y.max = yMax ? Number(yMax) : Math.max(...mplDisValues.concat(ocDisValues));
 
-    newChart.options.scales.x = {
-        type: 'linear',
-        // beginAtZero: true,
-        title: {
-            display: true,
-            text: 'DIGITIZER SIGNEL'
-        },
-        min: 0
-    };
-
-    newChart.options.scales.y = {
-        type: 'linear',
-        // beginAtZero: true,
-        title: {
-            display: true,
-            text: 'Distance (m)'
-        },
-        min: 0,
-        max: 5000
-    };
     newChart.update();
 }
 
@@ -225,40 +210,51 @@ function updateTimeDropdown() {
             option.textContent = `${time.substring(0, 2)}:${time.substring(2, 4)}`;
             timeSelect.appendChild(option);
         });
+
+        updateDataExperimentLabel();
     })
     .catch(error => console.error('Error fetching times:', error));
 }
 
 function search() {
+    updateGraph();
+    document.getElementById('updateAxis').disabled = false; // Enable the Update Axis button after search
+}
+
+function updateDataExperimentLabel() {
     const dateSelect = document.getElementById('dateSelect');
     const timeSelect = document.getElementById('timeSelect');
     const dataExperiment = document.getElementById('dataExperiment');
 
     const selectedDate = dateSelect.value;
     const selectedTime = timeSelect.value;
-    selectedCollection = `ALiN_${selectedDate}${selectedTime}`;
+    
+    if (selectedDate && selectedTime) {
+        // Format selectedDate and selectedTime into desired format
+        const formattedDate = `${selectedDate.substring(0, 4)}-${selectedDate.substring(4, 6)}-${selectedDate.substring(6, 8)}`;
+        const formattedTime = `${selectedTime.substring(0, 2)}:${selectedTime.substring(2, 4)}`;
+        selectedCollection = `ALiN_${formattedDate} ${formattedTime}`;
 
-    dataExperiment.value = selectedCollection;
-
-    fetchData(selectedCollection, updateChart);
-    // downloadData(selectedCollection);
-    // downloadExcel(selectedCollection);
+        dataExperiment.textContent = selectedCollection;
+    } else {
+        dataExperiment.textContent = '';
+    }
 }
 
 function downloadData() {
-    if (!selectedCollection) {
+    if (!originalFormatCollection) {
         alert('Please select a data collection first.');
         return;
     }
 
-    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + selectedCollection;
+    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + originalFormatCollection;
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", selectedCollection + ".json");
+            downloadAnchorNode.setAttribute("download", originalFormatCollection + ".json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -270,26 +266,30 @@ function downloadData() {
 }
 
 function downloadExcel() {
-    if (!selectedCollection) {
+    if (!originalFormatCollection) {
         alert('Please select a data collection first.');
         return;
     }
 
-    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + selectedCollection;
+    const apiUrl = 'http://192.168.2.190:5000/data/ALiN/' + originalFormatCollection;
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
+            if (!Array.isArray(data)) {
+                console.error('Fetched data is not an array:', data);
+                alert('Failed to download data. The data format is incorrect.');
+                return;
+            }
+
             const wb = XLSX.utils.book_new();
             const ws_name = "Data";
 
-            // สร้าง array สำหรับเก็บข้อมูลที่จะแปลงเป็น Excel
             let excelData = [];
             data.forEach((item, index) => {
                 item.MPL_cal.forEach((mplCalValue, mplIndex) => {
-                    // สร้าง object สำหรับแต่ละแถว
                     let row = excelData[mplIndex] || {};
                     row.MPL_cal = mplCalValue;
-                    row.MPL_dis = item.MPL_dis[mplIndex] || null;  // ใช้ || เพื่อใส่ค่าเริ่มต้นเป็น null ถ้าไม่มีข้อมูล
+                    row.MPL_dis = item.MPL_dis[mplIndex] || null;
                     excelData[mplIndex] = row;
                 });
 
@@ -301,11 +301,9 @@ function downloadExcel() {
                 });
             });
 
-            // สร้าง worksheet จากข้อมูลที่จัดรูปแบบเสร็จแล้ว
             const ws = XLSX.utils.json_to_sheet(excelData);
             XLSX.utils.book_append_sheet(wb, ws, ws_name);
 
-            // สร้างไฟล์ Excel และทำการดาวน์โหลด
             XLSX.writeFile(wb, selectedCollection + ".xlsx");
         })
         .catch(error => {
@@ -314,23 +312,44 @@ function downloadExcel() {
         });
 }
 
+function updateGraph() {
+    const dateSelect = document.getElementById('dateSelect');
+    const timeSelect = document.getElementById('timeSelect');
+
+    const selectedDate = dateSelect.value;
+    const selectedTime = timeSelect.value;
+
+    // Update the label with the new selection
+    updateDataExperimentLabel();
+
+    // Convert formatted date and time back to the original format for fetching data
+    const originalFormatCollection = `ALiN_${selectedDate}${selectedTime}`;
+    
+    fetchData(originalFormatCollection, updateChart);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     fetchDatesAndTimes();
 
-    // Add event listener to date dropdown to update time dropdown when a date is selected
+    // Add event listener to date and time dropdowns to update the graph when a date or time is selected
     const dateSelect = document.getElementById('dateSelect');
-    dateSelect.addEventListener('change', updateTimeDropdown);
+    const timeSelect = document.getElementById('timeSelect');
+    const showMPL = document.getElementById('showMPL');
+    const showALiN = document.getElementById('showALiN');
+    const updateAxis = document.getElementById('updateAxis');
 
-    // const timeSelect = document.getElementById('timeSelect');
-    // timeSelect.addEventListener('change', search);
+    dateSelect.addEventListener('change', function() {
+        updateTimeDropdown();
+        updateGraph();
+    });
+    timeSelect.addEventListener('change', updateGraph);
+    showMPL.addEventListener('change', updateGraph);
+    showALiN.addEventListener('change', updateGraph);
+    updateAxis.addEventListener('click', updateGraph);
+
     const searchButton = document.querySelector('button[type="submit"]');
     searchButton.addEventListener('click', function(event) {
         event.preventDefault(); // ป้องกันการรีเฟรชหน้าเว็บ
         search();
     });
 });
-
-// เรียกใช้งานฟังก์ชันค้นหาเมื่อเว็บโหลดเสร็จ
-// search1();
-// เรียกใช้ฟังก์ชั่นดึงข้อมูลและอัปเดตแผนภูมิ
-
